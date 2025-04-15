@@ -1,0 +1,146 @@
+/*********************************************************************
+*Function name: countWordFrequency
+*
+*Summary: gets an input file, sorts and counts the words, and returns
+*	the count of each word in an output file
+*
+*Inputs: none
+*Outputs: none
+*
+*Compilation instructions: make
+*
+*Bash instructions:./wordCount.exe 'input.txt' 'output.txt'
+*
+*Makefile note: The Makefile will only run on Windows. If run
+*	in Linux, remove the .exe after wordCount
+***********************************************************************
+*Pseudocode:
+*Begin
+*	open input file
+*	read each word of input file
+*	remove input character
+*	sort into words
+*	if not in list
+*		add word to list alphabetically
+*	else
+*		add 1 to word count
+*	print sorted list to output file
+*End
+**********************************************************************/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "myLinkedList.h"
+#include <ctype.h>
+
+// Function to count word frequency in a linked list
+void countWordFrequency(LinkedList *list, const char *inputFileName) {
+    // Open input file for reading
+    FILE *file = fopen(inputFileName, "r");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening input file %s\n", inputFileName);
+        exit(1);
+    }
+
+    // Read each word from the input file and add it to the linked list
+    char buffer[256];
+    while (fgets(buffer, sizeof(buffer), file)) {
+        // Remove newline character
+        buffer[strcspn(buffer, "\n")] = 0;
+
+        // Tokenize the line into words
+        char *token = strtok(buffer, " \t\r\n.,;:'\"?!()");
+        while (token != NULL) {
+            // Convert word to lowercase for case-insensitive counting
+            for (int i = 0; token[i]; i++) {
+                token[i] = tolower(token[i]);
+            }
+
+            // Check if the word is already in the list
+            Node *current = list->head;
+            Node *prev = NULL;
+            int found = 0;
+            while (current != NULL) {
+                if (strcmp(current->data, token) == 0) {
+                    current->frequency++;
+                    found = 1;
+                    break;
+                }
+                prev = current;
+                current = current->next;
+            }
+            if (!found) {
+                // Add the word to the list, sorted alphabetically
+                Node *newNode = malloc(sizeof(Node));
+                if (newNode == NULL) {
+                    fprintf(stderr, "Memory allocation error\n");
+                    exit(1);
+                }
+                strcpy(newNode->data, token);
+                newNode->frequency = 1;
+                newNode->next = NULL;
+
+            if (list->head == NULL) {
+                list->head = newNode;
+            } else {
+                current = list->head;
+                prev = NULL;
+            while (current != NULL && strcmp(current->data, token) < 0) {
+                prev = current;
+                current = current->next;
+            }
+            if (prev == NULL) {
+                newNode->next = list->head;
+                list->head = newNode;
+            } else {
+                    newNode->next = current;
+                    prev->next = newNode;
+                }
+            }
+            }
+        token = strtok(NULL, " \t\r\n.,;:'\"?!()");
+        }
+    }
+
+    fclose(file);
+
+    // Print sorted linked list to output file
+    printf("Writing output to %s\n", "output.txt");
+    printLinkedList(list, "output.txt");
+}
+
+/***********************************************************************
+*Function name: main
+*
+*inputs: argc, argv
+*outputs: none
+***********************************************************************
+*Pseudocode:
+*Begin
+*	Input error check
+*	call countWordFrequency
+*	Free list when done
+*End
+***********************************************************************/
+
+
+int main(int argc, char *argv[]) {
+    //check for errors
+    if (argc != 3) {
+        fprintf(stderr, "Error: two command-line arguments required.\n");
+        exit(1);
+    }
+
+    LinkedList *list; // Changed to LinkedList*
+    list = createLinkedList(); // Get the pointer
+    if (list == NULL)
+    {
+       fprintf(stderr, "Error creating linked list\n");
+       exit(1);
+    }
+
+    //call countWordFrequency
+    countWordFrequency(list, argv[1]);
+
+    freeLinkedList(list); // Free the list when done
