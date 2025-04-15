@@ -1,0 +1,90 @@
+#include "myLinkedList.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+// Create a new empty linked list
+LinkedList* createLinkedList(void) {
+    LinkedList *list = malloc(sizeof(LinkedList));
+    if (list == NULL) {
+        return NULL; // Handle allocation failure
+    }
+    list->head = NULL;
+    return list;
+}
+
+// Insert a node at the head of the linked list
+void insertAtHead(LinkedList *list, char data[21]) {
+    Node *newNode = malloc(sizeof(Node));
+    if (newNode == NULL) {
+        fprintf(stderr, "Memory allocation error\n");
+        exit(1);
+    }
+    strcpy(newNode->data, data);
+    newNode->frequency = 1;
+    newNode->next = list->head;
+    list->head = newNode;
+}
+
+// Print the contents of a linked list to an output file
+void printLinkedList(LinkedList *list, const char *outputFileName) {
+    FILE *file = fopen(outputFileName, "w");
+    if (file == NULL) {
+        fprintf(stderr, "Error opening output file %s\n", outputFileName);
+        exit(1);
+    }
+
+    Node *currentNode = list->head;
+    while (currentNode != NULL) {
+        fprintf(file, "%-20s %d\n", currentNode->data, currentNode->frequency);
+        currentNode = currentNode->next;
+    }
+
+    fclose(file);
+}
+
+void addNode(LinkedList *list, char data[21]) {
+    if (list->head == NULL) {
+        list->head = malloc(sizeof(Node));
+        if (list->head == NULL)
+        {
+           fprintf(stderr, "Memory allocation error\n");
+           exit(1);
+        }
+        strcpy(list->head->data, data);
+        list->head->frequency = 1;
+        list->head->next = NULL;
+    } else {
+        Node *currentNode = list->head;
+        while (currentNode->next != NULL) {
+            currentNode = currentNode->next;
+        }
+        currentNode->next = malloc(sizeof(Node));
+        if(currentNode->next == NULL)
+        {
+           fprintf(stderr, "Memory allocation error\n");
+           exit(1);
+        }
+        strcpy(currentNode->next->data, data);
+        currentNode->next->frequency = 1;
+        currentNode->next->next = NULL;
+    }
+}
+
+void traverse(LinkedList *list) {
+    Node *currentNode = list->head;
+    while (currentNode != NULL) {
+        printf("%s\n", currentNode->data);
+        currentNode = currentNode->next;
+    }
+}
+
+// Function to free the entire linked list
+void freeLinkedList(LinkedList *list) {
+    Node *currentNode = list->head;
+    Node *nextNode;
+    while (currentNode != NULL) {
+        nextNode = currentNode->next;
+        free(currentNode);
+        currentNode = nextNode;
+}
