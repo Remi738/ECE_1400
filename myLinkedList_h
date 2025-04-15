@@ -1,0 +1,23 @@
+#ifndef MY_LINKED_LIST_H
+#define MY_LINKED_LIST_H
+
+// Structure to represent a node in the linked list
+typedef struct Node {
+    char data[21]; // Maximum length of 20 characters
+    int frequency;
+    struct Node *next;
+} Node;
+
+// Type definition for a linked list
+typedef struct LinkedList {
+    Node *head;
+} LinkedList;
+
+// Function prototypes
+LinkedList* createLinkedList(void);
+void insertAtHead(LinkedList *list, char data[21]);
+void printLinkedList(LinkedList *list, const char *outputFileName);
+void addNode(LinkedList *list, char data[21]);
+void traverse(LinkedList *list);
+void freeLinkedList(LinkedList *list);
+#endif
