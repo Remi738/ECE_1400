@@ -10,9 +10,6 @@
 *Compilation instructions: make
 *
 *Bash instructions:./wordCount.exe 'input.txt' 'output.txt'
-*
-*Makefile note: The Makefile will only run on Windows. If run
-*	in Linux, remove the .exe after wordCount
 ***********************************************************************
 *Pseudocode:
 *Begin
