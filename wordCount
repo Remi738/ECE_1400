@@ -86,6 +86,7 @@ void countWordFrequency(LinkedList *list, const char *inputFileName) {
             } else {
                 current = list->head;
                 prev = NULL;
+            //while loop covers edge cases using strcmp
             while (current != NULL && strcmp(current->data, token) < 0) {
                 prev = current;
                 current = current->next;
@@ -99,6 +100,7 @@ void countWordFrequency(LinkedList *list, const char *inputFileName) {
                 }
             }
             }
+        //ignores special characters
         token = strtok(NULL, " \t\r\n.,;:'\"?!()");
         }
     }
