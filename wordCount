@@ -144,3 +144,4 @@ int main(int argc, char *argv[]) {
     countWordFrequency(list, argv[1]);
 
     freeLinkedList(list); // Free the list when done
+}
